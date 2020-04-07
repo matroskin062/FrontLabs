@@ -1,0 +1,17 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+.App {
+  margin: 0 auto;
+  width: 1200px;
+  display: grid;
+  grid-template-areas: 
+  'navbar'
+  'content';
+  grid-gap:10px;
+}
+.app-content{
+  grid-area: content;
+  min-height: 1000px;
+}

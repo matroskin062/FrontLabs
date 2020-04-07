@@ -1,0 +1,26 @@
+.navbar{
+    grid-area: navbar;
+    text-align: center;
+    height: 40px;
+    background-color: lightgreen;
+}
+
+.navbar ul{
+    list-style: none;
+}
+.navbar li{
+    padding: 0 10px 0 10px;
+    display: inline;
+    line-height: 40px;
+}
+.navbar a{
+    font-size: 20px;
+    width: 130px;
+    display: inline-block;
+    text-decoration: none;
+    color: black;
+}
+
+.navbar a:hover{
+    background-color: lightgray;
+}

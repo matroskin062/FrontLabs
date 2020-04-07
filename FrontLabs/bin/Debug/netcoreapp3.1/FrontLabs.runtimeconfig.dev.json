@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\matroskin\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\matroskin\\.nuget\\packages"
+    ]
+  }
+}

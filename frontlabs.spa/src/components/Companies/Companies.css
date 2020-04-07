@@ -1,0 +1,8 @@
+.btn-danger{
+    margin-right: 10px;
+}
+
+.inputForm textarea{
+    resize: none;
+    width: 100%;
+}

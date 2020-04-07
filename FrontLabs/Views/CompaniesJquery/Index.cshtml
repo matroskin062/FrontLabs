@@ -1,0 +1,307 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<style>
+    #label {
+        font-size: 40px;
+        padding-bottom: 10px;
+        letter-spacing: 10px;
+        font-weight: bold;
+    }
+
+    .company-item {
+        margin-bottom: 20px;
+        border: 1px solid gainsboro;
+        padding: 5px;
+        max-width: 350px;
+    }
+
+    .card-body span {
+        margin-bottom: 20px;
+        height: 20px;
+    }
+
+    #form-container {
+        top: 90px;
+        right: 30%;
+        position: absolute;
+    }
+
+    .delete {
+        background-color: #f44336;
+    }
+
+    .update {
+        background-color: yellow;
+    }
+</style>
+<body>
+    <div>
+        <span id="label">Companies</span>
+        <div id="companies-container"></div>
+        <div id='form-container'>
+            <form id="formadura4ka">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input id="name" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter name">
+                </div>
+                <button type="submit" id="sub-btn" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var items = null;
+        var isUpdate = false;
+        var updateItemId = '';
+        const api = '/api/Companies';
+        function GET() {
+            var container = document.getElementById('companies-container');
+            $('#companies-container').empty();
+            function renderCompany(item) {
+                var div = document.createElement('div');
+                div.classList.add('company-item');
+                var company = '<div class="card"><div class="card-body"> ' +
+                    '<span>Id :' + item.id + '</span><br />' +
+                    '<span>Name :' + item.name + '</span><br />' +
+                    '<div className="d-flex"> ' +
+                    `<button class="btn btn-warning btn-update" onclick="redirectToEdit('${item.id}')">Update</button> ` +
+                    `<button class="btn btn-danger" onclick="DeleteCompany('${item.id}')">Delete</button>` +
+                    '</div>'
+                    + '</div>'
+                    + '</div>';
+                div.innerHTML = company;
+                container.appendChild(div);
+            }
+            $.ajax({
+                type: "GET",
+                url: api,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                processdata: true,
+                success: function (response) {
+                    items = response;
+                    response.forEach(renderCompany);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.statusText);
+                }
+            });
+        }
+        function CreateCompany(data) {
+            var jsonData = JSON.stringify(data);
+            $.ajax({
+                type: "POST",
+                url: api,
+                data: jsonData,
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    parent.postMessage(JSON.stringify({ type: 'POST' }));
+                    GET();
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.statusText);
+                }
+            });
+        }
+
+        function DeleteCompany(id) {
+            $.ajax({
+                url: `${api}/${id}`,
+                type: 'DELETE',
+                success: function (result) {
+                    parent.postMessage(JSON.stringify({ type: 'DELETE', payload: id }));
+                    GET();
+                }
+            });
+
+        }
+
+        $("#sub-btn").click(function () {
+            var data = {
+                Name: $('#name').val(),
+            };
+            CreateCompany(data);
+            return false;
+        });
+
+
+        const redirectToEdit = (modelId) => window.location.replace(`../../gui/companiesjquery/edit/${modelId}`);
+
+        GET();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                // async function getCompanies() {
+                //     const response = await fetch(api, {
+                //         method: "GET",
+                //         headers: { "Accept": "application/json" }
+                //     })
+                //     if (response.ok === true) {
+                //         const companies = await response.json();
+                //         let rows = document.querySelector("tbody");
+                //         companies.map(el => {
+                //             rows.append(row(el));
+                //         })
+                //     }
+                // }
+
+                // async function getCompany(id) {
+                //     const response = await fetch(`${api}/${id}`, {
+                //         method: "GET",
+                //         headers: { "Accept": "application/json" }
+                //     });
+                //     if (response.ok === true) {
+                //         const company = await response.json();
+                //         const form = document.forms["companiesForm"];
+                //         form.elements["id"].value = company.id;
+                //         form.elements["name"].value = company.name;
+                //     }
+                // }
+
+                // async function createCompany(companyName) {
+
+                //     const response = await fetch(api, {
+                //         method: "POST",
+                //         headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                //         body: JSON.stringify({
+                //             name: companyName,
+                //         })
+                //     });
+                //     if (response.ok === true) {
+                //         const company = await response.json();
+                //         reset();
+                //         document.querySelector("tbody").append(row(company));
+                //     }
+                // }
+
+                // async function editCompany(companyId, companyName) {
+                //     const response = await fetch(`${api}/${companyId}`, {
+                //         method: "PUT",
+                //         headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                //         body: JSON.stringify({
+                //             id: parseInt(companyId, 10),
+                //             name: companyName
+                //         })
+                //     });
+                //     if (response.ok === true) {
+                //         const company = await response.json();
+                //         reset();
+                //         document.querySelector("tr[data-rowid='" + company.id + "']").replaceWith(row(company));
+                //     }
+                // }
+
+                // async function deleteCompany(id) {
+                //     const response = await fetch(`${api}/${id}`, {
+                //         method: "DELETE",
+                //         headers: { "Accept": "application/json" }
+                //     });
+                //     if (response.ok === true) {
+                //         const company = await response.json();
+                //         document.querySelector("tr[data-rowid='" + company.id + "']").remove();
+                //     }
+                // }
+
+                // const reset = () => {
+                //     const form = document.forms["companiesForm"];
+                //     form.reset();
+                //     form.elements["id"].value = 0;
+                // }
+
+                // const row = (company) => {
+                //     const tr = document.createElement('tr');
+                //     tr.setAttribute('data-rowid', company.id);
+
+                //     const idTd = document.createElement('td');
+                //     idTd.append(company.id);
+                //     tr.append(idTd);
+
+                //     const nameTd = document.createElement("td");
+                //     nameTd.append(company.name);
+                //     tr.append(nameTd);
+
+                //     const linksTd = document.createElement("td");
+
+                //     const editLink = document.createElement("a");
+                //     editLink.setAttribute("data-id", company.id);
+                //     editLink.setAttribute("style", "display: inline; margin: 0 3px");
+
+                //     editLink.className = 'btn btn-warning';
+                //     editLink.append("Изменить");
+                //     editLink.addEventListener("click", e => {
+
+                //         e.preventDefault();
+                //         getCompany(company.id);
+                //     });
+                //     linksTd.append(editLink)
+
+                //     const removeLink = document.createElement("a");
+                //     removeLink.setAttribute("data-id", company.id);
+                //     removeLink.setAttribute("style", "display: inline; margin: 0 3px");
+                //     removeLink.append("Удалить");
+                //     removeLink.className = 'btn btn-danger'
+                //     removeLink.addEventListener("click", e => {
+
+                //         e.preventDefault();
+                //         deleteCompany(company.id);
+                //     });
+
+                //     linksTd.append(removeLink);
+                //     tr.appendChild(linksTd);
+
+
+                //     return tr;
+                // }
+
+
+                // document.forms["companiesForm"].addEventListener("submit", e => {
+                //     e.preventDefault();
+                //     const form = document.forms["companiesForm"];
+                //     const id = form.elements["id"].value;
+                //     const name = form.elements["name"].value;
+                //     if (id == 0)
+                //         createCompany(name);
+                //     else
+                //         editCompany(id, name);
+                // });
+
+                // getCompanies();
+    </script>
+</body>
+</html>

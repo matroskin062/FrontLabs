@@ -1,0 +1,57 @@
+﻿@model FrontLabs.DAL.Models.Company
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>Companies</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input id="input-Name" class="form-control" />
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" onclick="save(modelId)">Save</button>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a href="#" onclick="redirectToList()">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        const modelId = "@Model.Id";
+        $(document).ready(() => {
+            console.log('document-ready');
+            $.get({
+                url: '../../../api/companies/' + modelId,
+                success: (data) => {
+                    $('#input-Name').val(data.name);
+                }
+            });
+        });
+        const save = (id) => {
+            const company = {
+                id: modelId.toString(),
+                name: $('#input-Name').val(),
+            };
+            $.ajax({
+                url: `../../../api/companies/${modelId}`,
+                type: "PUT",
+                data: JSON.stringify(company),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: redirectToList(),
+            });
+            console.log(company);
+        };
+        const redirectToList = () => window.location.replace("../../CompaniesJquery");
+    </script>
+}
